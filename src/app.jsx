@@ -1,48 +1,50 @@
-import { useState, useEffect } from 'preact/hooks';
-import axios from 'axios';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import MainLayout from './layout/MainLayout';
-import './style/index.css';
+import { useState, useEffect } from 'preact/hooks'
+import axios from 'axios'
+import MainLayout from './layout/MainLayout'
+import './style/index.css'
 
 export function App() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([])
+  const [search, setSearch] = useState(null)
+  const [nextPage, setNextPage] = useState(2)
 
-  const [page, setPage] = useState(0);
+  const fetchImages = (page = 1, query = null) => {
+    const uri = query ? `search?query=${query}&` : `curated?`
 
-  const fetchImages = (page) => {
+    const url = `${import.meta.env.VITE_BASE_URL}${uri}page=${page}&per_page=16`
+
     axios
-      .get(
-        `${import.meta.env.VITE_BASE_URL}curated/?page=${page}&per_page=16`,
-        {
-          headers: {
-            Authorization: import.meta.env.VITE_API_KEY,
-          },
-        }
-      )
+      .get(url, {
+        headers: {
+          Authorization: import.meta.env.VITE_API_KEY,
+        },
+      })
       .then(({ data }) => {
-        setImages([...images, ...data.photos]);
+        page == 1
+          ? setImages(data.photos)
+          : setImages([...images, ...data.photos])
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   const fetchMoreImages = () => {
-    setPage(page + 1);
-    fetchImages(page + 2);
-  };
+    fetchImages(nextPage, search ? search : null)
+    setNextPage(nextPage + 1)
+  }
 
   useEffect(() => {
-    fetchImages(page);
-  }, []);
+    fetchImages()
+  }, [])
 
   const chunkArray = (arr, size) => {
-    var groupedArray = [];
+    var groupedArray = []
     for (var i = 0; i < arr?.length; i += size) {
-      groupedArray.push(arr.slice(i, i + size));
+      groupedArray.push(arr.slice(i, i + size))
     }
-    return groupedArray;
-  };
+    return groupedArray
+  }
 
   return (
     <>
@@ -51,24 +53,23 @@ export function App() {
           The best free stock photos, royalty free images &#38; videos shared by
           creators.
         </h1>
-        <form>
-          <div>
-            <input type='text' placeholder='Search' />
-          </div>
-        </form>
-
-        <div className='grid'>
-          <button className='outline'>Home</button>
-          <button className='outline'>Videos</button>
-          <button className='outline'>Leaderboard</button>
-          <button className='outline'>Challenges</button>
-        </div>
-
-        <div>
+        <p>
           <a target='_blank' href='https://www.pexels.com'>
             <small>Photos provided by Pexels</small>
           </a>
-        </div>
+        </p>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            fetchImages(1, search)
+          }}
+        >
+          <input
+            type='text'
+            placeholder='Search'
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
 
         {chunkArray(images, 4).map((chunk) => (
           <div className='grid'>
@@ -90,5 +91,5 @@ export function App() {
         )}
       </MainLayout>
     </>
-  );
+  )
 }
