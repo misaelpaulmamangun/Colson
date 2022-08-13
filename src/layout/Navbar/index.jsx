@@ -4,7 +4,7 @@ const Navbar = () => {
       <nav className='container'>
         <ul>
           <li>
-            <strong>Preactexels</strong>
+            <strong>PREACTEXELS</strong>
           </li>
         </ul>
         <ul>
@@ -17,7 +17,7 @@ const Navbar = () => {
         </ul>
       </nav>
     </header>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
