@@ -29,8 +29,8 @@ export function App() {
       })
   }
 
-  const fetchMoreImages = () => {
-    fetchImages(nextPage)
+  const fetchMoreImages = async () => {
+    await fetchImages(nextPage)
     setNextPage(nextPage + 1)
   }
 
