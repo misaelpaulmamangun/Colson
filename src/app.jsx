@@ -7,13 +7,15 @@ export function App() {
   const [images, setImages] = useState([])
   const [search, setSearch] = useState(null)
   const [nextPage, setNextPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const fetchImages = (page = 1) => {
+  const fetchImages = async (page = 1) => {
+    setIsLoading(true)
     const uri = search ? `search?query=${search}&` : `curated?`
 
     const url = `${import.meta.env.VITE_BASE_URL}${uri}page=${page}&per_page=16`
 
-    axios
+    await axios
       .get(url, {
         headers: {
           Authorization: import.meta.env.VITE_API_KEY,
@@ -26,6 +28,9 @@ export function App() {
       })
       .catch((err) => {
         console.log(err)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }
 
@@ -71,24 +76,30 @@ export function App() {
           />
         </form>
 
-        {chunkArray(images, 4).map((chunk) => (
-          <div className='grid'>
-            {chunk.map((image) => (
-              <article>
-                <img src={image?.src.portrait} />
-                <footer>
-                  <center>
-                    <div>Photographer</div>
-                    <small>{image.photographer}</small>
-                  </center>
-                </footer>
-              </article>
-            ))}
-          </div>
-        ))}
-        {images.length > 0 && (
-          <button onClick={fetchMoreImages}>Load More</button>
+        {isLoading ? (
+          <article aria-busy='true'></article>
+        ) : (
+          chunkArray(images, 4).map((chunk) => (
+            <div className='grid'>
+              {chunk.map((image) => (
+                <article>
+                  <img src={image?.src.portrait} />
+                  <footer>
+                    <center>
+                      <div>Photographer</div>
+                      <small>{image.photographer}</small>
+                    </center>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          ))
         )}
+        {isLoading
+          ? null
+          : images.length > 0 && (
+              <button onClick={fetchMoreImages}>Load More</button>
+            )}
       </MainLayout>
     </>
   )
