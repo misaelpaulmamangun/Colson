@@ -8,8 +8,8 @@ export function App() {
   const [search, setSearch] = useState(null)
   const [nextPage, setNextPage] = useState(2)
 
-  const fetchImages = (page = 1, query = null) => {
-    const uri = query ? `search?query=${query}&` : `curated?`
+  const fetchImages = (page = 1) => {
+    const uri = search ? `search?query=${search}&` : `curated?`
 
     const url = `${import.meta.env.VITE_BASE_URL}${uri}page=${page}&per_page=16`
 
@@ -30,7 +30,7 @@ export function App() {
   }
 
   const fetchMoreImages = () => {
-    fetchImages(nextPage, search ? search : null)
+    fetchImages(nextPage)
     setNextPage(nextPage + 1)
   }
 
