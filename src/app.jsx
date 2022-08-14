@@ -36,7 +36,7 @@ export function App() {
 
   useEffect(() => {
     fetchImages()
-  }, [])
+  }, [search])
 
   const chunkArray = (arr, size) => {
     var groupedArray = []
