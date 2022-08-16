@@ -4,7 +4,7 @@ const Navbar = () => {
       <nav className='container'>
         <ul>
           <li>
-            <strong>PREACTEXELS</strong>
+            <strong>Colson</strong>
           </li>
         </ul>
         <ul>
