@@ -10,7 +10,7 @@ export function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchImages = async (page = 1) => {
-    setIsLoading(true)
+    page === 1 ? setIsLoading(true) : setIsLoading(false)
     const uri = search ? `search?query=${search}&` : `curated?`
 
     const url = `${import.meta.env.VITE_BASE_URL}${uri}page=${page}&per_page=16`
