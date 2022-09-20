@@ -44,8 +44,8 @@ export function App() {
   }, [search])
 
   const chunkArray = (arr, size) => {
-    var groupedArray = []
-    for (var i = 0; i < arr?.length; i += size) {
+    const groupedArray = []
+    for (let i = 0; i < arr?.length; i += size) {
       groupedArray.push(arr.slice(i, i + size))
     }
     return groupedArray
@@ -66,7 +66,7 @@ export function App() {
         <form
           onSubmit={(e) => {
             e.preventDefault()
-            fetchImages(1, search)
+            fetchImages(1)
           }}
         >
           <input
